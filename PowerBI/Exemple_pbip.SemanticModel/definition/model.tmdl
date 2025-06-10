@@ -1,0 +1,21 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Table1"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.143.1378.0 (25.05)+4e1de9c957866bc5336e0d250838314aa54ff3a8
+
+annotation PBI_ProTooling = ["DevMode","TMDLView_Desktop"]
+
+ref table Table1
+ref table Date
+
+ref cultureInfo fr-FR
+

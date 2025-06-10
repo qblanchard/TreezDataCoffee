@@ -1,0 +1,86 @@
+table Table1
+	lineageTag: c1612527-3417-4c1e-b689-3aed91bbaa6b
+
+	column Column3
+		dataType: string
+		lineageTag: 8f8b2bee-99ff-4c06-8796-c5984fd69a89
+		summarizeBy: none
+		sourceColumn: Column1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Année
+		dataType: int64
+		formatString: 0
+		lineageTag: 9b0763e9-9960-432a-9a48-9797853b968a
+		summarizeBy: sum
+		sourceColumn: Année
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type indicateur'
+		dataType: string
+		lineageTag: c4a183e4-7547-4099-a11c-23e15054d589
+		summarizeBy: none
+		sourceColumn: Type indicateur
+
+		annotation SummarizationSetBy = Automatic
+
+	column Région
+		dataType: string
+		lineageTag: 9695242d-8b6e-414d-8e5c-de24b08a012f
+		summarizeBy: none
+		sourceColumn: Région
+
+		annotation SummarizationSetBy = Automatic
+
+	column Attribut
+		dataType: string
+		lineageTag: 4f02d3c6-e4f3-4e1f-8e1f-cce7df262c9e
+		summarizeBy: none
+		sourceColumn: Attribut
+
+		annotation SummarizationSetBy = Automatic
+
+	column Valeur
+		dataType: int64
+		formatString: 0
+		lineageTag: 6fc1f7b8-35cd-4dbb-8ec7-06de7f2f1ec3
+		summarizeBy: sum
+		sourceColumn: Valeur
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: string
+		lineageTag: d08a6371-69ea-4deb-8c0d-dacbe2d16490
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Personnalisé
+		dataType: string
+		lineageTag: d35a19a8-b1a5-48b2-8435-a6914c544d09
+		summarizeBy: none
+		sourceColumn: Personnalisé
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Table1 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\qblanchard\Downloads\POCOPCO.xlsx"), null, true),
+				    Table1_Table = Source{[Item="Table1",Kind="Table"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(Table1_Table,{{"Column1", type text}, {"janvier", Int64.Type}, {"Février", Int64.Type}, {"mars", Int64.Type}, {"avril", Int64.Type}, {"mai", Int64.Type}, {"juin", Int64.Type}, {"juillet", Int64.Type}, {"août", Int64.Type}, {"septembre", Int64.Type}, {"octobre", Int64.Type}, {"novembre", Int64.Type}, {"décembre", Int64.Type}, {"Année", Int64.Type}, {"Type indicateur", type text}, {"Région", type text}}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Changed Type", {"Column1", "Année", "Type indicateur", "Région"}, "Attribut", "Valeur"),
+				    #"Added Custom" = Table.AddColumn(#"Unpivoted Columns", "Date", each Date.FromText([Année]&[Attribut]&"01")),
+				    #"Added Custom1" = Table.AddColumn(#"Added Custom", "Personnalisé", each Date.FromText(Number.ToText([Année]) & "-" & [Attribut] & "-01"))
+				in
+				    #"Added Custom1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

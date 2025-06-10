@@ -7,7 +7,7 @@
       "type": "SharedResources"
     }
   },
-  "layoutOptimization": 0,
+  "layoutOptimization": "None",
   "objects": {
     "section": [
       {
